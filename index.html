@@ -1,277 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Savalory | Order Food & Reserve Table</title>
-
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  
-  <style>
-    :root {
-      --primary: #D44A43;
-      --text-dark: #222;
-      --text-light: #555;
-      --bg-light: #fff;
-      --card-bg: #fafafa;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Makanan - Savalory Café</title>
+<style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #fafafa; }
+    h2 { margin-top: 40px; }
+    .menu-card {
+        border: 1px solid #ccc; padding: 15px; margin-bottom: 10px;
+        border-radius: 10px; background: white;
+        display: flex; justify-content: space-between; align-items: center;
     }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
-    }
-
-    body {
-      background-color: var(--bg-light);
-      color: var(--text-dark);
-      overflow-x: hidden;
-    }
-
-    /* Navbar */
-    header {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 60px;
-      background: white;
-      border-bottom: 1px solid #eee;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .logo {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--text-dark);
-      letter-spacing: 0.5px;
-    }
-
-    .nav-buttons {
-      display: flex;
-      gap: 12px;
-    }
-
-    .btn {
-      border: none;
-      padding: 8px 18px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: 0.3s;
-    }
-
-    .btn-login {
-      background: #f4f4f4;
-      color: var(--text-dark);
-    }
-
-    .btn-login:hover {
-      background: #eaeaea;
-    }
-
-    .btn-signup {
-      background: var(--primary);
-      color: white;
-    }
-
-    .btn-signup:hover {
-      background: #b93d36;
-    }
-
-    /* Hero Section */
-    .hero {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      padding: 60px 80px;
-      gap: 40px;
-    }
-
-    .hero-text {
-      flex: 1 1 400px;
-    }
-
-    .hero-text h1 {
-      font-size: 48px;
-      line-height: 1.2;
-      margin-bottom: 20px;
-    }
-
-    .hero-text p {
-      font-size: 18px;
-      color: var(--text-light);
-      margin-bottom: 30px;
-      max-width: 500px;
-    }
-
-    .browse-btn {
-      background: var(--primary);
-      color: white;
-      padding: 14px 28px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .browse-btn:hover {
-      background: #b93d36;
-    }
-
-    .promo {
-      flex: 1 1 320px;
-      background: var(--primary);
-      color: white;
-      border-radius: 20px;
-      padding: 40px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
-    }
-
-    .promo h2 {
-      font-size: 50px;
-      margin-bottom: 10px;
-    }
-
-    .promo p {
-      font-size: 22px;
-    }
-
-    .promo img {
-      width: 160px;
-      margin-top: 15px;
-    }
-
-    /* Popular Dishes */
-    .popular {
-      padding: 60px 80px;
-      background: var(--card-bg);
-    }
-
-    .popular h2 {
-      font-size: 28px;
-      margin-bottom: 30px;
-      text-align: left;
-    }
-
-    .dish-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 25px;
-    }
-
-    .dish-card {
-      background: white;
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      transition: transform 0.3s;
-    }
-
-    .dish-card:hover {
-      transform: translateY(-6px);
-    }
-
-    .dish-card img {
-      width: 100%;
-      border-radius: 10px;
-      margin-bottom: 15px;
-    }
-
-    .dish-card h3 {
-      font-size: 18px;
-      margin-bottom: 8px;
-    }
-
-    .dish-card p {
-      font-size: 15px;
-      color: var(--text-light);
-    }
-
-    /* Footer */
-    footer {
-      background: #f9f9f9;
-      text-align: center;
-      padding: 25px;
-      font-size: 14px;
-      color: #666;
-    }
-
-    @media (max-width: 768px) {
-      .hero {
-        flex-direction: column;
-        text-align: center;
-        padding: 40px 20px;
-      }
-      .promo {
-        width: 100%;
-      }
-      .popular {
-        padding: 40px 20px;
-      }
-    }
-  </style>
+    button { padding: 6px 15px; border-radius: 6px; border: none; cursor: pointer; background: #0d6efd; color: white; }
+    button:hover { opacity: .8; }
+    input, select { padding: 8px; margin-top: 5px; width: 100%; border-radius: 6px; border: 1px solid #ccc; }
+    #cart { background: white; padding: 15px; border-radius: 10px; margin-top: 20px; }
+</style>
 </head>
 <body>
 
-  <header>
-    <div class="logo">SAVALORY</div>
-    <div class="nav-buttons">
-      <button class="btn btn-login">Login</button>
-      <button class="btn btn-signup">Sign up</button>
-    </div>
-  </header>
+<h1>🍽️ Pemesanan Menu Savalory Café</h1>
 
-  <section class="hero">
-    <div class="hero-text">
-      <h1>Order Food & Reserve Table</h1>
-      <p>Savalory is a modern web-based restaurant platform for easy food ordering and quick table reservations with no hassle.</p>
-      <button class="browse-btn">Browse Menu</button>
-    </div>
+<!-- ========================= MENU ========================= -->
+<h2>Menu Makanan</h2>
+<div class="menu-card">
+    <span>Mie Goreng</span><strong>Rp 15.000</strong>
+    <button onclick="addToCart('Mie Goreng', 15000)">Tambah</button>
+</div>
+<div class="menu-card">
+    <span>Nasi Ayam</span><strong>Rp 22.000</strong>
+    <button onclick="addToCart('Nasi Ayam', 22000)">Tambah</button>
+</div>
 
-    <div class="promo">
-      <h2>20% OFF</h2>
-      <p>Today’s Special Deal</p>
-      <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png" alt="Burger Promo">
-    </div>
-  </section>
+<h2>Menu Minuman</h2>
+<div class="menu-card">
+    <span>Es Kopi Susu</span><strong>Rp 18.000</strong>
+    <button onclick="addToCart('Es Kopi Susu', 18000)">Tambah</button>
+</div>
+<div class="menu-card">
+    <span>Lemon Tea</span><strong>Rp 12.000</strong>
+    <button onclick="addToCart('Lemon Tea', 12000)">Tambah</button>
+</div>
 
-  <section class="popular">
-    <h2>Popular Dishes</h2>
-    <div class="dish-grid">
-      <div class="dish-card">
-        <img src="https://cdn-icons-png.flaticon.com/512/1404/1404945.png" alt="Pizza">
-        <h3>Pizza</h3>
-        <p>Cheese, chicken, and tomato sauce for your cravings.</p>
-      </div>
+<!-- ========================= KERANJANG ========================= -->
+<div id="cart">
+    <h2>Keranjang Pesanan</h2>
+    <ul id="cart-list"></ul>
+    <h3>Total: Rp <span id="total">0</span></h3>
+</div>
 
-      <div class="dish-card">
-        <img src="https://cdn-icons-png.flaticon.com/512/3075/3075977.png" alt="Burger">
-        <h3>Burger</h3>
-        <p>Beef patty with melted cheese and fresh salad.</p>
-      </div>
+<!-- ========================= FORM PELANGGAN ========================= -->
+<h2>Data Pelanggan</h2>
+<form id="form-order">
+    <label>Nama Pelanggan</label>
+    <input type="text" id="nama" required>
 
-      <div class="dish-card">
-        <img src="https://cdn-icons-png.flaticon.com/512/1404/1404941.png" alt="Noodle Soup">
-        <h3>Noodle Soup</h3>
-        <p>Warm noodles with chicken and savory broth.</p>
-      </div>
-    </div>
-  </section>
+    <label>No Meja</label>
+    <input type="text" id="meja" required>
 
-  <footer>
-    <p>© 2025 Savalory — Modern Web Restaurant Experience</p>
-  </footer>
+    <label>No WhatsApp</label>
+    <input type="text" id="wa" required>
+
+    <button type="submit" style="margin-top: 15px; width:100%;">Pesan Sekarang</button>
+</form>
+
+<script>
+let cart = [];
+let total = 0;
+
+function addToCart(name, price) {
+    cart.push({ name, price });
+    total += price;
+    updateCart();
+}
+
+function updateCart() {
+    const cartList = document.getElementById("cart-list");
+    const totalText = document.getElementById("total");
+
+    cartList.innerHTML = "";
+    cart.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = `${item.name} - Rp ${item.price.toLocaleString()}`;
+        cartList.appendChild(li);
+    });
+
+    totalText.textContent = total.toLocaleString();
+}
+
+document.getElementById("form-order").addEventListener("submit", function(e){
+    e.preventDefault();
+    
+    const nama = document.getElementById("nama").value;
+    const meja = document.getElementById("meja").value;
+    const wa = document.getElementById("wa").value;
+
+    let pesan = `Hallo saya ingin pesan:%0A`;
+    cart.forEach(item => {
+        pesan += `- ${item.name} (Rp ${item.price.toLocaleString()})%0A`;
+    });
+    pesan += `%0ATotal: Rp ${total.toLocaleString()}%0A`;
+    pesan += `%0ANama: ${nama}%0AMeja: ${meja}%0AWA: ${wa}`;
+
+    window.open(`https://wa.me/${wa}?text=${pesan}`, "_blank"); 
+});
+</script>
 
 </body>
 </html>

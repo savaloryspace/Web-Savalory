@@ -35,27 +35,38 @@
   .muted{color:var(--muted);font-size:13px}
   .price{font-weight:700}
   .add{margin-top:auto;padding:10px;border-radius:8px;background:var(--primary);color:#fff;border:none;cursor:pointer}
+  .sold-badge{position:absolute;left:12px;top:12px;background:rgba(0,0,0,0.7);color:#fff;padding:6px 8px;border-radius:8px;font-size:12px}
+  .disabled{opacity:0.6;pointer-events:none}
   /* cart icon */
   .cart-wrap{position:relative}
   .cart-badge{position:absolute;right:-8px;top:-8px;background:var(--primary);color:#fff;border-radius:999px;padding:4px 7px;font-size:12px}
   /* cart panel */
-  .cart-panel{position:fixed;right:16px;top:70px;width:360px;max-width:94%;height:calc(100vh - 120px);background:var(--card);border-radius:12px;box-shadow:0 20px 60px rgba(2,6,23,0.2);transform:translateX(110%);transition:transform .35s ease;z-index:120;padding:14px;display:flex;flex-direction:column}
+  .cart-panel{position:fixed;right:16px;top:70px;width:420px;max-width:94%;height:calc(100vh - 120px);background:var(--card);border-radius:12px;box-shadow:0 20px 60px rgba(2,6,23,0.2);transform:translateX(110%);transition:transform .35s ease;z-index:120;padding:14px;display:flex;flex-direction:column}
   .cart-panel.open{transform:translateX(0)}
   .cart-list{flex:1;overflow:auto;padding:6px 4px}
-  .cart-item{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px}
+  .cart-item{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px;border-bottom:1px dashed rgba(0,0,0,0.04)}
   .qty{display:flex;gap:6px;align-items:center}
   .small-btn{padding:6px 8px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:transparent;cursor:pointer}
   .total-row{display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px dashed rgba(0,0,0,0.06);margin-top:8px}
   .checkout-btn{width:100%;padding:12px;border-radius:10px;border:none;background:var(--primary);color:#fff;cursor:pointer}
+  /* checkout form improved */
+  .checkout-form{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  .checkout-form .full{grid-column:1/-1}
+  .form-input{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);background:transparent}
+  .label{font-size:13px;color:var(--muted);margin-bottom:4px;display:block}
   /* admin modal */
   .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center;z-index:150}
-  .modal{background:var(--card);padding:16px;border-radius:12px;width:520px;max-width:94%}
+  .modal{background:var(--card);padding:16px;border-radius:12px;width:820px;max-width:94%}
   .show{display:flex}
   .row{display:flex;gap:8px;align-items:center}
-  input[type="text"],input[type="number"],select{padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);width:100;background:transparent;color:var(--text)}
+  input[type="text"],input[type="number"],select,textarea{padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);width:100;background:transparent;color:var(--text)}
   label{font-size:13px;color:var(--muted)}
   .admin-actions{display:flex;gap:8px;margin-top:8px}
   .small{font-size:13px;padding:6px 8px}
+  /* admin table */
+  .admin-table{width:100%;border-collapse:collapse;margin-top:10px}
+  .admin-table th,.admin-table td{padding:8px;border-bottom:1px solid rgba(0,0,0,0.06);text-align:left}
+  .admin-controls{display:flex;gap:6px;justify-content:flex-end}
   /* loading overlay */
   .loading-backdrop{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);z-index:200}
   .loading{width:320px;max-width:90%;background:var(--card);padding:18px;border-radius:12px;text-align:center}
@@ -66,6 +77,7 @@
     .hero{flex-direction:column;align-items:stretch}
     .cart-panel{right:10px;top:70px;width:92%}
     header{padding:10px}
+    .checkout-form{grid-template-columns:1fr}
   }
 </style>
 </head>
@@ -128,13 +140,29 @@
         <div id="totalText" style="font-weight:800">Rp 0</div>
       </div>
 
+      <!-- RAPIKAN FORM: two-column + full width for notes -->
       <div style="margin-top:10px">
-        <label class="muted">Nama Pelanggan</label>
-        <input id="custName" type="text" placeholder="Nama lengkap">
-        <label class="muted" style="margin-top:6px">No Meja</label>
-        <input id="custTable" type="text" placeholder="Contoh: 5">
-        <label class="muted" style="margin-top:6px">No WhatsApp Admin (contoh: 628123...)</label>
-        <input id="custWA" type="text" placeholder="Nomor tujuan pesanan">
+        <div class="checkout-form">
+          <div>
+            <label class="label">Nama Pelanggan</label>
+            <input id="custName" class="form-input" type="text" placeholder="Nama lengkap" required>
+          </div>
+          <div>
+            <label class="label">No Meja / Takeaway</label>
+            <input id="custTable" class="form-input" type="text" placeholder="Contoh: 5 / Takeaway" required>
+          </div>
+
+          <div class="full">
+            <label class="label">No WhatsApp Admin (contoh: 628123456789)</label>
+            <input id="custWA" class="form-input" type="tel" pattern="[0-9+]{6,}" placeholder="Nomor tujuan pesanan" required>
+          </div>
+
+          <div class="full">
+            <label class="label">Catatan (opsional)</label>
+            <textarea id="custNote" class="form-input" rows="2" placeholder="Ex: tanpa bawang, pedas level 2"></textarea>
+          </div>
+        </div>
+
         <div style="margin-top:10px;display:flex;gap:8px">
           <button id="checkoutBtn" class="checkout-btn">Pesan Sekarang</button>
           <button id="clearCart" class="small-btn">Bersihkan</button>
@@ -160,7 +188,7 @@
           <button id="importBtn" class="small-btn">Import Menu (JSON)</button>
         </div>
         <div style="font-size:12px;margin-top:8px;color:var(--muted)">
-          Password default: <code>admin123</code> (ubah di panel setelah login)
+          Password default: <code>savalory123</code> (ubah di panel setelah login)
         </div>
       </div>
 
@@ -171,8 +199,8 @@
             <label class="muted">Tambah Item (nama | harga | kategori | gambar)</label>
             <div style="display:flex;gap:6px">
               <input id="newName" type="text" placeholder="Nama">
-              <input id="newPrice" type="number" placeholder="Harga" style="width:100px">
-              <input id="newCat" type="text" placeholder="Kategori" style="width:100px">
+              <input id="newPrice" type="number" placeholder="Harga" style="width:120px">
+              <input id="newCat" type="text" placeholder="Kategori" style="width:120px">
             </div>
             <input id="newImg" type="text" placeholder="URL gambar (opsional)" style="margin-top:6px">
             <div style="margin-top:6px">
@@ -182,18 +210,29 @@
           </div>
         </div>
 
-        <div style="margin-top:10px">
-          <label class="muted">Atur Diskon Global (%)</label>
-          <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
-            <input id="globalDiscount" type="number" min="0" max="100" style="width:100px">
-            <button id="saveDiscount" class="small-btn">Simpan</button>
+        <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+          <div style="flex:1">
+            <label class="muted">Atur Diskon Global (%)</label>
+            <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+              <input id="globalDiscount" type="number" min="0" max="100" style="width:100px">
+              <button id="saveDiscount" class="small-btn">Simpan</button>
+            </div>
+          </div>
+          <div style="width:270px">
+            <label class="muted">Ganti Password Admin</label>
+            <div style="display:flex;gap:6px;margin-top:6px">
+              <input id="newAdminPass" type="password" placeholder="Password baru" style="flex:1">
+              <button id="changePassBtn" class="small-btn">Ubah</button>
+            </div>
           </div>
         </div>
 
         <div style="margin-top:12px">
-          <label class="muted">Daftar Menu (klik Edit untuk ubah)</label>
-          <div id="adminList" style="max-height:220px;overflow:auto;margin-top:8px"></div>
-          <div style="margin-top:8px;display:flex;gap:8px">
+          <label class="muted">Daftar Menu (Edit langsung di baris)</label>
+          <table class="admin-table" id="adminList">
+            <!-- rows generated by JS -->
+          </table>
+          <div style="margin-top:8px;display:flex;gap:8px;justify-content:flex-end">
             <button id="exportMenu" class="small-btn">Export JSON</button>
             <button id="resetDefault" class="small-btn">Reset Default</button>
           </div>
@@ -218,10 +257,10 @@
    INITIAL MENU (DEFAULT)
    =========================== */
 const DEFAULT_MENU = [
-  { id: genId(), name:"Mie Goreng", price:15000, category:"Makanan", img:"https://images.unsplash.com/photo-1604908177522-04f9a5a1d1d1?auto=format&fit=crop&w=800&q=60" },
-  { id: genId(), name:"Nasi Ayam", price:22000, category:"Makanan", img:"https://images.unsplash.com/photo-1604908177578-6d6b1f1c9b1f?auto=format&fit=crop&w=800&q=60" },
-  { id: genId(), name:"Es Kopi Susu", price:18000, category:"Minuman", img:"https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=800&q=60" },
-  { id: genId(), name:"Lemon Tea", price:12000, category:"Minuman", img:"https://images.unsplash.com/photo-1562007908-dc7b4b5d9b6a?auto=format&fit=crop&w=800&q=60" }
+  { id: genId(), name:"Mie Goreng", price:15000, category:"Makanan", img:"https://images.unsplash.com/photo-1604908177522-04f9a5a1d1d1?auto=format&fit=crop&w=800&q=60", soldOut:false },
+  { id: genId(), name:"Nasi Ayam", price:22000, category:"Makanan", img:"https://images.unsplash.com/photo-1604908177578-6d6b1f1c9b1f?auto=format&fit=crop&w=800&q=60", soldOut:false },
+  { id: genId(), name:"Es Kopi Susu", price:18000, category:"Minuman", img:"https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=800&q=60", soldOut:false },
+  { id: genId(), name:"Lemon Tea", price:12000, category:"Minuman", img:"https://images.unsplash.com/photo-1562007908-dc7b4b5d9b6a?auto=format&fit=crop&w=800&q=60", soldOut:false }
 ];
 
 function genId(){return 'i_'+Math.random().toString(36).slice(2,9)}
@@ -231,7 +270,7 @@ function genId(){return 'i_'+Math.random().toString(36).slice(2,9)}
    =========================== */
 let menu = load('savalory_menu') || DEFAULT_MENU;
 let cart = load('savalory_cart') || [];
-let settings = load('savalory_settings') || {discount:0, adminPass:'admin123', theme:'light'};
+let settings = load('savalory_settings') || {discount:0, adminPass:'savalory123', theme:'light'}; // default pw savalory123
 
 /* ===========================
    UTIL
@@ -261,7 +300,7 @@ const filtersEl = document.getElementById('filters');
 const menuGrid = document.getElementById('menuGrid');
 
 function uniqueCategories(){
-  const cats = new Set(menu.map(i=>i.category||'Uncategorized')); return ['All', ...cats];
+  const cats = new Set(menu.map(i=>i.category||'Umum')); return ['All', ...cats];
 }
 function renderFilters(){
   filtersEl.innerHTML = '';
@@ -278,11 +317,13 @@ function renderMenu(filter='All'){
   const list = (filter==='All') ? menu : menu.filter(i=>i.category===filter);
   list.forEach(item=>{
     const c = document.createElement('div'); c.className='card';
+    const soldHtml = item.soldOut ? `<div class="sold-badge">SOLD OUT</div>` : '';
     c.innerHTML = `
+      ${soldHtml}
       <img class="thumb" src="${item.img||''}" alt="${item.name}" onerror="this.style.display='none'">
       <div class="name-row"><div><h3 style="margin:0">${item.name}</h3><div class="muted">${item.category||'Umum'}</div></div><div class="price">Rp ${Number(item.price).toLocaleString()}</div></div>
       <p class="muted">${item.desc||''}</p>
-      <button class="add" data-id="${item.id}" data-name="${escapeHtml(item.name)}" data-price="${item.price}">Tambah</button>
+      <button class="add ${item.soldOut ? 'disabled' : ''}" data-id="${item.id}" data-name="${escapeHtml(item.name)}" data-price="${item.price}" ${item.soldOut ? 'disabled' : ''}>${item.soldOut ? 'SOLD OUT' : 'Tambah'}</button>
     `;
     menuGrid.appendChild(c);
   });
@@ -303,11 +344,11 @@ function renderMenu(filter='All'){
    CART LOGIC
    =========================== */
 const cartPanel = document.getElementById('cartPanel');
-const openCart = document.getElementById('openCart');
+const openCartBtn = document.getElementById('openCart');
 const closeCart = document.getElementById('closeCart');
 const cartCountEl = document.getElementById('cartCount');
 
-openCart.addEventListener('click', ()=>{cartPanel.classList.add('open');});
+openCartBtn.addEventListener('click', ()=>{cartPanel.classList.add('open');});
 closeCart.addEventListener('click', ()=>{cartPanel.classList.remove('open');});
 
 function renderCart(){
@@ -364,17 +405,19 @@ function addToCart(item, btn){
   renderCart();
 
   // flying animation
-  const rect = btn.getBoundingClientRect();
-  const cartBtn = document.getElementById('openCart');
-  const cartRect = cartBtn.getBoundingClientRect();
-  const fly = document.createElement('div');
-  fly.style.position='fixed'; fly.style.left = rect.left+'px'; fly.style.top = rect.top+'px';
-  fly.style.width='40px'; fly.style.height='40px'; fly.style.borderRadius='8px';
-  fly.style.background='var(--primary)'; fly.style.opacity='0.95'; fly.style.zIndex=9999;
-  document.body.appendChild(fly);
-  const dx = cartRect.left - rect.left; const dy = cartRect.top - rect.top;
-  fly.animate([{transform:'translate(0,0) scale(1)', opacity:1},{transform:`translate(${dx}px,${dy}px) scale(.2)`, opacity:0}],{duration:700,easing:'cubic-bezier(.2,.7,.2,1)'});
-  setTimeout(()=>fly.remove(),750);
+  try{
+    const rect = btn.getBoundingClientRect();
+    const cartBtn = document.getElementById('openCart');
+    const cartRect = cartBtn.getBoundingClientRect();
+    const fly = document.createElement('div');
+    fly.style.position='fixed'; fly.style.left = rect.left+'px'; fly.style.top = rect.top+'px';
+    fly.style.width='40px'; fly.style.height='40px'; fly.style.borderRadius='8px';
+    fly.style.background='var(--primary)'; fly.style.opacity='0.95'; fly.style.zIndex=9999;
+    document.body.appendChild(fly);
+    const dx = cartRect.left - rect.left; const dy = cartRect.top - rect.top;
+    fly.animate([{transform:'translate(0,0) scale(1)', opacity:1},{transform:`translate(${dx}px,${dy}px) scale(.2)`, opacity:0}],{duration:700,easing:'cubic-bezier(.2,.7,.2,1)'});
+    setTimeout(()=>fly.remove(),750);
+  }catch(e){}
 }
 
 /* cart count */
@@ -404,23 +447,30 @@ document.getElementById('checkoutBtn').addEventListener('click', async ()=>{
   const name = document.getElementById('custName').value.trim();
   const meja = document.getElementById('custTable').value.trim();
   const wa = document.getElementById('custWA').value.trim();
+  const note = document.getElementById('custNote').value.trim();
   if(!name || !meja || !wa){ alert('Lengkapi data pelanggan (nama, meja, nomor WA)'); return; }
 
   // show loading
   await fakeLoading(1400);
 
-  // prepare message for WA
+  // prepare message for WA (existing behavior)
   const subtotal = cart.reduce((s,i)=>s + (i.price*(i.qty||1)), 0);
   const discount = Number(settings.discount||0);
   const total = Math.round(subtotal * (1 - discount/100));
   const itemsText = cart.map(i=>`${i.qty}x ${i.name} - Rp ${ (i.price * i.qty).toLocaleString() }`).join('%0A');
-  const text = encodeURIComponent(`Pesanan:%0A${cart.map(i=>`${i.qty}x ${i.name} - Rp ${i.price.toLocaleString()}`).join('%0A')}%0A%0ASubtotal: Rp ${subtotal.toLocaleString()}%0ADiskon: ${discount}%0ATotal: Rp ${total.toLocaleString()}%0A%0ANama: ${name}%0AMeja: ${meja}`);
+  const text = encodeURIComponent(
+    `🍽️ *Pesanan Baru*%0A%0A` +
+    `${cart.map(i=>`${i.qty}x ${i.name} - Rp ${i.price.toLocaleString()}`).join('%0A')}` +
+    `%0A%0ASubtotal: Rp ${subtotal.toLocaleString()}%0ADiskon: ${discount}%0ATotal: Rp ${total.toLocaleString()}` +
+    `%0A%0ANama: ${name}%0AMeja: ${meja}%0AWA tujuan: ${wa}%0ACatatan: ${note}`
+  );
+
   // save order locally (admin can view later)
   const orders = load('savalory_orders') || [];
-  orders.push({id:Date.now(), name, meja, wa, items: cart, subtotal, discount, total, ts:new Date()});
+  orders.push({id:Date.now(), name, meja, wa, note, items: cart, subtotal, discount, total, ts:new Date()});
   save('savalory_orders', orders);
 
-  // open whatsapp (new tab)
+  // open whatsapp (new tab) - keep current functionality
   window.open(`https://wa.me/${wa}?text=${text}`, '_blank');
 
   // clear cart
@@ -438,81 +488,103 @@ const adminPanel = document.getElementById('adminPanel');
 const doLogin = document.getElementById('doLogin');
 const adminPassword = document.getElementById('adminPassword');
 const closeModal = document.getElementById('closeModal');
+
 adminBtn.addEventListener('click', ()=>{ modalBackdrop.classList.add('show'); modalBackdrop.setAttribute('aria-hidden', 'false'); });
 closeModal.addEventListener('click', ()=>{ modalBackdrop.classList.remove('show'); modalBackdrop.setAttribute('aria-hidden', 'true'); });
+
 document.getElementById('importBtn').addEventListener('click', ()=>{
-  const j = prompt('Paste JSON menu di sini (array of items).'); try{ const arr = JSON.parse(j); menu = arr; save('savalory_menu', menu); renderFilters(); renderMenu(); alert('Import sukses'); }catch(e){alert('JSON invalid');}
+  const j = prompt('Paste JSON menu di sini (array of items). Format: [{name,price,category,img,soldOut}]');
+  try{
+    const arr = JSON.parse(j);
+    // normalize and assign ids if missing
+    arr.forEach(a=>{ if(!a.id) a.id = genId(); if(typeof a.soldOut==='undefined') a.soldOut = false; });
+    menu = arr; save('savalory_menu', menu); renderFilters(); renderMenu(); renderAdminList(); alert('Import sukses');
+  }catch(e){alert('JSON invalid');}
 });
 
 doLogin.addEventListener('click', ()=>{
   const val = adminPassword.value || '';
-  if(val === (settings.adminPass || 'admin123')){ // success
+  if(val === (settings.adminPass || 'savalory123')){ // success
     adminLogin.style.display='none'; adminPanel.style.display='block'; renderAdminList();
     document.getElementById('globalDiscount').value = settings.discount || 0;
   } else alert('Password salah');
 });
 
-/* admin actions */
+/* admin actions: add, save menu, discount, export, reset, change pass */
 document.getElementById('addItem').addEventListener('click', ()=>{
   const name = document.getElementById('newName').value.trim();
   const price = Number(document.getElementById('newPrice').value || 0);
   const cat = document.getElementById('newCat').value.trim() || 'Umum';
   const img = document.getElementById('newImg').value.trim();
   if(!name || !price){ alert('Nama & harga wajib'); return; }
-  menu.push({ id: genId(), name, price, category: cat, img }); save('savalory_menu', menu); renderFilters(); renderMenu(); renderAdminList();
+  menu.push({ id: genId(), name, price, category: cat, img, soldOut:false });
+  save('savalory_menu', menu); renderFilters(); renderMenu(); renderAdminList();
   document.getElementById('newName').value=''; document.getElementById('newPrice').value=''; document.getElementById('newCat').value=''; document.getElementById('newImg').value='';
 });
 
 document.getElementById('saveMenu').addEventListener('click', ()=>{ save('savalory_menu', menu); alert('Menu disimpan ke localStorage'); });
-document.getElementById('saveDiscount').addEventListener('click', ()=>{ settings.discount = Number(document.getElementById('globalDiscount').value || 0); save('savalory_settings', settings); alert('Diskon tersimpan'); updateTotals(); });
-
+document.getElementById('saveDiscount').addEventListener('click', ()=>{ settings.discount = Number(document.getElementById('globalDiscount').value || 0); save('savalory_settings', settings); alert('Diskon tersimpan'); updateTotals(); renderAdminList(); });
 document.getElementById('exportMenu').addEventListener('click', ()=>{ const json = JSON.stringify(menu,null,2); prompt('Copy JSON menu berikut:', json); });
 document.getElementById('resetDefault').addEventListener('click', ()=>{ if(confirm('Reset menu ke default?')){ menu = DEFAULT_MENU; save('savalory_menu', menu); renderFilters(); renderMenu(); renderAdminList(); } });
 
+document.getElementById('changePassBtn').addEventListener('click', ()=>{
+  const np = document.getElementById('newAdminPass').value.trim();
+  if(!np){ alert('Password baru tidak boleh kosong'); return; }
+  settings.adminPass = np; save('savalory_settings', settings);
+  alert('Password admin berhasil diubah');
+  document.getElementById('newAdminPass').value = '';
+});
+
+/* ADMIN LIST rendering with inline edit per row */
 function renderAdminList(){
-  const el = document.getElementById('adminList'); el.innerHTML='';
+  const table = document.getElementById('adminList');
+  table.innerHTML = `
+    <thead>
+      <tr><th>Nama</th><th>Harga</th><th>Kategori</th><th>Sold Out</th><th style="text-align:right">Aksi</th></tr>
+    </thead>
+    <tbody></tbody>
+  `;
+  const tbody = table.querySelector('tbody');
   menu.forEach((m, idx)=>{
-    const div = document.createElement('div'); div.style.padding='8px'; div.style.borderBottom='1px solid rgba(0,0,0,0.04)';
-    div.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div style="flex:1">
-          <strong contenteditable="false" data-idx="${idx}" class="adm-name">${m.name}</strong>
-          <div style="font-size:13px;color:var(--muted)">Rp <span class="adm-price">${m.price}</span> • ${m.category||'Umum'}</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:6px">
-          <button class="small-btn edit" data-idx="${idx}">Edit</button>
-          <button class="small-btn del" data-idx="${idx}">Hapus</button>
-        </div>
-      </div>
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input class="admin-name" data-idx="${idx}" value="${escapeHtml(m.name)}" style="width:100%"></td>
+      <td><input class="admin-price" data-idx="${idx}" type="number" value="${m.price}" style="width:120px"></td>
+      <td><input class="admin-cat" data-idx="${idx}" value="${escapeHtml(m.category||'Umum')}" style="width:120px"></td>
+      <td style="text-align:center"><input class="admin-sold" data-idx="${idx}" type="checkbox" ${m.soldOut ? 'checked' : ''}></td>
+      <td style="text-align:right" class="admin-controls">
+        <button class="small-btn admin-save" data-idx="${idx}">Save</button>
+        <button class="small-btn admin-del" data-idx="${idx}">Hapus</button>
+      </td>
     `;
-    el.appendChild(div);
+    tbody.appendChild(tr);
   });
-  // bind
-  el.querySelectorAll('.del').forEach(b=>b.addEventListener('click', (e)=>{
-    const i = Number(b.dataset.idx);
-    if(confirm('Hapus item ini?')){ menu.splice(i,1); save('savalory_menu', menu); renderFilters(); renderMenu(); renderAdminList(); }
-  }));
-  el.querySelectorAll('.edit').forEach(b=>b.addEventListener('click', (e)=>{
-    const i = Number(b.dataset.idx);
-    const nm = prompt('Ubah nama:', menu[i].name);
-    const pr = prompt('Ubah harga (angka):', menu[i].price);
-    const cat = prompt('Ubah kategori:', menu[i].category || 'Umum');
-    if(nm && pr){ menu[i].name = nm; menu[i].price = Number(pr); menu[i].category = cat || 'Umum'; save('savalory_menu', menu); renderFilters(); renderMenu(); renderAdminList(); }
-  }));
+
+  // bind save & delete
+  tbody.querySelectorAll('.admin-save').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const i = Number(b.dataset.idx);
+      const name = tbody.querySelector(`.admin-name[data-idx="${i}"]`).value.trim();
+      const price = Number(tbody.querySelector(`.admin-price[data-idx="${i}"]`).value || 0);
+      const cat = tbody.querySelector(`.admin-cat[data-idx="${i}"]`).value.trim() || 'Umum';
+      const sold = tbody.querySelector(`.admin-sold[data-idx="${i}"]`).checked;
+      if(!name || !price){ alert('Nama & harga wajib'); return; }
+      menu[i].name = name; menu[i].price = price; menu[i].category = cat; menu[i].soldOut = sold;
+      save('savalory_menu', menu); renderFilters(); renderMenu(); renderAdminList();
+    });
+  });
+  tbody.querySelectorAll('.admin-del').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const i = Number(b.dataset.idx);
+      if(confirm('Hapus item ini?')){ menu.splice(i,1); save('savalory_menu', menu); renderFilters(); renderMenu(); renderAdminList(); }
+    });
+  });
 }
 
-/* admin setting to change admin password */
-function changeAdminPass(newPass){
-  settings.adminPass = newPass; save('savalory_settings', settings);
-}
+/* admin import/export handled above */
 
-/* ===========================
-   BOOTSTRAP UI
-   =========================== */
-renderFilters(); renderMenu(); renderCart(); renderCartCount();
-
-/* helper escape */
-function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
+/* expose for debugging */
+window._Savalory = {menu, cart, settings};
 
 /* Click outside modal to close */
 modalBackdrop.addEventListener('click', (e)=>{ if(e.target===modalBackdrop){ modalBackdrop.classList.remove('show'); } });
@@ -520,8 +592,8 @@ modalBackdrop.addEventListener('click', (e)=>{ if(e.target===modalBackdrop){ mod
 /* Initial save of settings if not exist */
 if(!load('savalory_settings')) save('savalory_settings', settings);
 
-/* expose for debugging */
-window._Savalory = {menu, cart, settings};
+/* BOOTSTRAP UI */
+renderFilters(); renderMenu(); renderCart(); renderCartCount();
 </script>
 </body>
 </html>

@@ -1,45 +1,558 @@
-<!doctype html>
-<html lang="en">
-  
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-  </head>
-  
-  <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Features</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Pricing</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown link
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
-      </ul>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Savalory Ordering System</title>
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Savalory — Order Food (Single Page)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial, sans-serif;}
+body{background:#f4f4f9;padding:20px;}
+h2{margin:15px 0;}
+.container{display:flex;gap:20px;}
+.card{background:#fff;padding:15px;border-radius:10px;box-shadow:0 0 5px rgba(0,0,0,0.2);}
+#menu{flex:2;}
+#cart{flex:1;}
+input,select,button{padding:8px;margin:4px 0;width:100%;}
+button{cursor:pointer;border:none;border-radius:6px;background:#007bff;color:white;font-weight:bold;}
+button:hover{opacity:.8;}
+.menu-item{padding:10px;margin:8px 0;border-radius:8px;background:#fafafa;border:1px solid #ddd;}
+.cart-item{padding:10px;margin:8px 0;border-radius:8px;background:#fff8e1;border:1px solid #ffc107;}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.badge{background:red;color:#fff;border-radius:50%;padding:4px 8px;font-size:12px;}
+/* ========= GLOBAL STYLE ========= */
+:root{ --bg:#f7f7f8; --card:#fff; --text:#222; --muted:#666; --primary:#D44A43; }
+[data-theme="dark"]{ --bg:#0f1720; --card:#0b1220; --text:#e6eef8; --muted:#9fb3c8; --primary:#ff6b5b; }
+
+*{box-sizing:border-box}
+body{font-family:'Inter',sans-serif;margin:0;background:var(--bg);color:var(--text)}
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--card);border-bottom:1px solid rgba(0,0,0,0.04);position:sticky;top:0;z-index:80}
+.brand{font-weight:700;font-size:18px;display:flex;gap:10px;align-items:center}
+.actions{display:flex;gap:10px;align-items:center}
+.btn{padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:600}
+.btn-ghost{background:transparent;border:1px solid rgba(0,0,0,0.06)}
+.btn-primary{background:var(--primary);color:#fff}
+.icon-btn{background:transparent;border:none;cursor:pointer}
+
+main{padding:20px;max-width:1100px;margin:0 auto}
+.hero{display:flex;gap:20px;align-items:center;justify-content:space-between;margin-bottom:18px}
+.promo{background:var(--primary);color:#fff;padding:18px;border-radius:12px;min-width:200px;text-align:center}
+
+/* menu */
+.filters{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.filter-btn{padding:8px 12px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:var(--card);cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.04);display:flex;flex-direction:column;gap:10px;position:relative}
+.thumb{height:140px;border-radius:10px;object-fit:cover;width:100%}
+.add{margin-top:auto;padding:10px;border-radius:8px;background:var(--primary);color:#fff;border:none;cursor:pointer}
+
+/* cart panel */
+.cart-panel{position:fixed;right:16px;top:70px;width:420px;max-width:94%;height:calc(100vh - 120px);background:var(--card);border-radius:12px;box-shadow:0 20px 60px rgba(2,6,23,0.2);transform:translateX(110%);transition:transform .35s}
+.cart-panel.open{transform:translateX(0)}
+.cart-item{display:flex;gap:10px;align-items:center;padding:8px;border-bottom:1px dashed rgba(0,0,0,0.06)}
+
+.checkout-btn{width:100%;padding:12px;border-radius:10px;border:none;background:var(--primary);color:#fff}
+
+/* admin modal */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:150}
+.modal{background:var(--card);padding:16px;border-radius:12px;width:820px;max-width:94%}
+.show{display:flex}
+
+.admin-table{width:100%;border-collapse:collapse;margin-top:10px}
+.admin-table th,.admin-table td{padding:8px;border-bottom:1px solid rgba(0,0,0,0.06);text-align:left}
+
+@media (max-width:700px){
+  .hero{flex-direction:column}
+  .cart-panel{width:92%}
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h1>Savalory Ordering System</h1>
+  <button id="openCartBtn">Keranjang <span id="cartCount" class="badge">0</span></button>
+</div>
+
+<div class="container">
+  <div id="menu" class="card">
+    <h2>Menu</h2>
+    <div id="menuList"></div>
+<header>
+  <div class="brand">SAVALORY <span style="font-size:12px;color:var(--muted)">Order Food</span></div>
+  <div class="actions">
+    <button id="themeToggle" class="btn btn-ghost">🌙</button>
+    <button id="adminBtn" class="btn btn-ghost">Admin</button>
+    <button id="openCart" class="btn btn-ghost">🛒</button>
+    <div id="cartCount" class="cart-badge" style="color:white"></div>
+  </div>
+
+  <div id="cart" class="card">
+    <h2>Keranjang</h2>
+</header>
+
+
+<main>
+  <section class="hero">
+    <div>
+      <h2>Menu Populer</h2>
+      <div id="filters" class="filters"></div>
+      <div id="menuGrid" class="grid"></div>
+    </div>
+
+    <div class="promo">
+      <h3 style="margin:0">20% OFF</h3>
+      <small>Gunakan diskon dari Admin</small>
+    </div>
+  </section>
+
+  <!-- CART -->
+  <aside id="cartPanel" class="cart-panel">
+    <h3>Keranjang</h3>
+    <div id="cartList"></div>
+    <hr>
+    <h3>Total: Rp <span id="totalCart">0</span></h3>
+    <br>
+    <input type="text" id="custName" placeholder="Nama pemesan">
+    <input type="text" id="custTable" placeholder="Nomor Meja / Takeaway">
+    <input type="text" id="custWA" placeholder="Nomor WhatsApp Admin (628xxxx)">
+    <textarea id="custNote" placeholder="Catatan (opsional)"></textarea>
+    <br>
+    <button id="checkoutBtn">Checkout via WhatsApp</button>
+  </div>
+</div>
+
+<br><hr><br>
+    <div style="margin-top:10px">
+      <b>Subtotal :</b> <span id="subtotalText">Rp 0</span> <br>
+      <b>Diskon :</b> <span id="appliedDiscount">0%</span> <br>
+      <h3>Total : <span id="totalText">Rp 0</span></h3>
+
+<div class="card">
+  <h2>Tambah Menu (Admin)</h2>
+  <select id="newCategory">
+      <option value="Makanan">Makanan</option>
+      <option value="Minuman">Minuman</option>
+  </select>
+      <label>Nama</label>
+      <input type="text" id="custName">
+
+  <input type="text" id="newName" placeholder="Nama Menu">
+  <input type="number" id="newPrice" placeholder="Harga">
+  <button id="addMenuBtn">Tambah Menu</button>
+      <label>No Meja / Takeaway</label>
+      <input type="text" id="custTable">
+
+  <br><br>
+      <label>Nomor WhatsApp Admin</label>
+      <input type="text" id="custWA" placeholder="628xxx">
+
+  <h3>Diskon (%)</h3>
+  <input type="number" id="discount" placeholder="0">
+  <button id="saveDiscount">Simpan Diskon</button>
+</div>
+      <label>Catatan (opsional)</label>
+      <textarea id="custNote"></textarea>
+
+      <button id="checkoutBtn" class="checkout-btn">Pesan via WhatsApp</button>
+      <button id="clearCart" class="btn-ghost" style="width:100%;margin-top:6px">Bersihkan Keranjang</button>
+    </div>
+  </aside>
+
+<script>
+// ========================
+//  LOCAL STORAGE FUNCTIONS
+// ========================
+function save(key,data){ localStorage.setItem(key, JSON.stringify(data)); }
+function load(key, fallback){ return JSON.parse(localStorage.getItem(key)) || fallback; }
+
+// ===================
+//  DATA INITIALIZATION
+// ===================
+let menu = load('savalory_menu', []);
+let cart = load('savalory_cart', []);
+let settings = load('savalory_settings', {discount:0});
+
+// ===================
+//  RENDER MENU
+// ===================
+function renderMenu(){
+  const menuList = document.getElementById("menuList");
+  menuList.innerHTML = "";
+
+  menu.forEach((item,index)=>{
+    menuList.innerHTML += `
+      <div class="menu-item">
+        <b>${item.name}</b> <br>
+        Kategori: ${item.category} <br>
+        Harga: Rp ${item.price.toLocaleString()}
+        <br><br>
+        <button onclick="addToCart(${index})">Tambah</button>
+
+  <!-- ADMIN MODAL -->
+  <div id="modalBackdrop" class="modal-backdrop">
+    <div class="modal">
+      <h3>Admin Panel</h3>
+      <button id="closeModal" class="btn-ghost">Close</button>
+
+      <div id="adminLogin">
+        <label>Password Admin</label>
+        <input type="password" id="adminPassword">
+        <button id="doLogin" class="btn-primary">Login</button>
+      </div>
+    `;
+  });
+}
+
+// ===================
+//  ADD MENU (ADMIN)
+// ===================
+document.getElementById("addMenuBtn").addEventListener('click', ()=>{
+  const name = newName.value.trim();
+  const category = newCategory.value;
+  const price = Number(newPrice.value);
+      <div id="adminPanel" style="display:none;margin-top:20px">
+        <h4>Tambah Menu</h4>
+
+  if(!name || !price){
+    alert("Nama & Harga tidak boleh kosong.");
+    return;
+  }
+        <input id="newName" placeholder="Nama">
+        <input id="newPrice" type="number" placeholder="Harga">
+
+  menu.push({name,category,price});
+  save("savalory_menu", menu);
+        <!-- ✅ KATEGORI DIGANTI SELECT -->
+        <select id="newCat">
+          <option value="Makanan">Makanan</option>
+          <option value="Minuman">Minuman</option>
+        </select>
+
+  newName.value = "";
+  newPrice.value = "";
+        <input id="newImg" placeholder="URL gambar">
+
+  renderMenu();
+});
+
+// ===================
+//  CART FUNCTIONS
+// ===================
+function addToCart(i){
+  let item = menu[i];
+
+  let exists = cart.find(x => x.name === item.name);
+  if(exists){
+    exists.qty++;
+  } else {
+    cart.push({...item, qty:1});
+  }
+
+  save("savalory_cart", cart);
+  renderCart();
+  renderCartCount();
+        <button id="addItem" class="btn-primary" style="margin-top:10px">Tambah Item</button>
+
+        <hr>
+
+        <label>Diskon (%)</label>
+        <input type="number" id="globalDiscount" min="0" max="100">
+        <button id="saveDiscount" class="btn-ghost">Simpan</button>
+
+        <h4>Daftar Menu</h4>
+        <table id="adminList" class="admin-table"></table>
+
+        <button id="exportMenu" class="btn">Export JSON</button>
+        <button id="resetDefault" class="btn-ghost">Reset Default</button>
+      </div>
     </div>
   </div>
-</nav>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-  </body>
+</main>
+
+
+<script>
+/* ==============================
+      INITIAL DATA (DEFAULT)
+================================ */
+const DEFAULT_MENU = [
+  { id: genId(), name:"Mie Goreng", price:15000, category:"Makanan", img:"https://images.unsplash.com/photo-1604908177522-04f9a5a1d1d1?auto=format&fit=crop&w=800&q=60" },
+  { id: genId(), name:"Nasi Ayam", price:22000, category:"Makanan", img:"https://images.unsplash.com/photo-1604908177578-6d6b1f1c9b1f?auto=format&fit=crop&w=800&q=60" },
+  { id: genId(), name:"Es Kopi Susu", price:18000, category:"Minuman", img:"https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=800&q=60" },
+  { id: genId(), name:"Lemon Tea", price:12000, category:"Minuman", img:"https://images.unsplash.com/photo-1562007908-dc7b4b5d9b6a?auto=format&fit=crop&w=800&q=60" }
+];
+
+function genId(){ return 'i_'+Math.random().toString(36).slice(2,9) }
+
+let menu = JSON.parse(localStorage.getItem("savalory_menu")) || DEFAULT_MENU;
+let cart = JSON.parse(localStorage.getItem("savalory_cart")) || [];
+let settings = JSON.parse(localStorage.getItem("savalory_settings")) || {discount:0, adminPass:"savalory123"};
+
+
+/* ========== THEME ========== */
+function applyTheme(){
+  document.documentElement.setAttribute("data-theme",
+    document.documentElement.getAttribute("data-theme")==="dark" ? "light" : "dark"
+  );
+}
+document.getElementById("themeToggle").onclick = applyTheme;
+
+
+/* ========== FILTER & MENU RENDER ========== */
+function renderFilters(){
+  const cats = [...new Set(menu.map(i => i.category))];
+  document.getElementById("filters").innerHTML =
+    `<button class="filter-btn" onclick="renderMenu()">All</button>` +
+    cats.map(c => `<button class="filter-btn" onclick="renderMenu('${c}')">${c}</button>`).join("");
+}
+
+function renderMenu(filter=null){
+  const list = filter ? menu.filter(m => m.category === filter) : menu;
+  const grid = document.getElementById("menuGrid");
+  grid.innerHTML = "";
+
+  list.forEach(item => {
+    grid.innerHTML += `
+      <div class="card">
+        <img class="thumb" src="${item.img}">
+        <b>${item.name}</b>
+        <small>${item.category}</small>
+        <b>Rp ${item.price.toLocaleString()}</b>
+        <button class="add" onclick="addToCart('${item.id}')">Tambah</button>
+      </div>`;
+  });
+}
+renderFilters();
+renderMenu();
+
+
+/* ========== CART ========== */
+function addToCart(id){
+  const item = menu.find(i => i.id===id);
+  const exist = cart.find(i => i.id===id);
+  if(exist) exist.qty++;
+  else cart.push({...item, qty:1});
+
+function removeCart(i){
+  cart.splice(i,1);
+  save("savalory_cart", cart);
+  localStorage.setItem("savalory_cart", JSON.stringify(cart));
+  renderCart();
+  renderCartCount();
+}
+
+function renderCart(){
+  const cartList = document.getElementById("cartList");
+  cartList.innerHTML = "";
+  const c = document.getElementById("cartList");
+  c.innerHTML = "";
+
+  cart.forEach((item,index)=>{
+    cartList.innerHTML += `
+  if(cart.length===0){ c.innerHTML = "<i>Keranjang kosong</i>"; return;}
+
+  cart.forEach((i,ix)=>{
+    c.innerHTML += `
+      <div class="cart-item">
+        <b>${item.name}</b> x ${item.qty}
+        <br>Subtotal: Rp ${(item.price * item.qty).toLocaleString()}
+        <br><br>
+        <button onclick="removeCart(${index})">Hapus</button>
+      </div>
+    `;
+        <div>${i.name}<br><small>Rp ${i.price}</small></div>
+        <div style="margin-left:auto">
+          <button onclick="qty(${ix},-1)">-</button>
+          ${i.qty}
+          <button onclick="qty(${ix},1)">+</button>
+        </div>
+      </div>`;
+  });
+
+  const subtotal = cart.reduce((s,i)=>s + (i.price*i.qty), 0);
+  const disc = Number(settings.discount);
+  const total = Math.round(subtotal * (1 - disc/100));
+
+  document.getElementById("totalCart").innerText = total.toLocaleString();
+  updateTotal();
+}
+
+function renderCartCount(){
+  document.getElementById("cartCount").innerText = cart.length;
+function qty(i,x){
+  cart[i].qty = Math.max(1, cart[i].qty + x);
+  localStorage.setItem("savalory_cart", JSON.stringify(cart));
+  renderCart();
+}
+
+// ===================
+//  SAVE DISCOUNT
+// ===================
+document.getElementById("saveDiscount").addEventListener("click", ()=>{
+  settings.discount = Number(document.getElementById("discount").value);
+  save("savalory_settings", settings);
+  alert("Diskon disimpan!");
+});
+function updateTotal(){
+  const subtotal = cart.reduce((a,b)=>a+b.price*b.qty,0);
+  const total = Math.round(subtotal - (subtotal * (settings.discount/100)));
+
+// ===================
+//  CHECKOUT WHATSAPP
+// ===================
+document.getElementById('checkoutBtn').addEventListener('click', ()=>{
+  document.getElementById("subtotalText").textContent = "Rp "+subtotal.toLocaleString();
+  document.getElementById("totalText").textContent = "Rp "+total.toLocaleString();
+  document.getElementById("appliedDiscount").textContent = settings.discount+"%";
+}
+renderCart();
+
+  if(cart.length === 0){
+    alert("Keranjang kosong");
+    return;
+  }
+
+  const name = custName.value.trim();
+  const meja = custTable.value.trim();
+  const wa = custWA.value.trim();
+  const note = custNote.value.trim();
+/* ========== CHECKOUT WA ========== */
+document.getElementById("checkoutBtn").onclick = ()=>{
+  const wa = document.getElementById("custWA").value;
+  const name = document.getElementById("custName").value;
+  const meja = document.getElementById("custTable").value;
+  const note = document.getElementById("custNote").value;
+
+  if(!name || !meja || !wa){
+    alert("Isi Nama, Meja/Takeaway & No WA Admin!");
+    return;
+  }
+  let pesan = `Halo Admin, saya ingin pesan:%0A`;
+  cart.forEach(i=>{
+    pesan += `- ${i.name} x ${i.qty} (Rp ${i.price})%0A`;
+  });
+
+  const subtotal = cart.reduce((s,i)=>s + (i.price*i.qty), 0);
+  const disc = Number(settings.discount);
+  const total = Math.round(subtotal * (1 - disc/100));
+  pesan += `%0ATotal: ${document.getElementById("totalText").textContent}`;
+  pesan += `%0ANama: ${name}%0AMeja/Takeaway: ${meja}%0ACatatan: ${note}`;
+
+  let list = cart.map(i=>`• ${i.name} x${i.qty} (Rp ${i.price.toLocaleString()})`).join("%0A");
+  window.open("https://wa.me/"+wa+"?text="+pesan);
+};
+
+  let msg = `
+🛒 *ORDER BARU*
+Nama: ${name}
+Meja/Takeaway: ${meja}
+
+${list}
+
+Subtotal: Rp ${subtotal.toLocaleString()}
+Diskon: ${disc}%
+Total: *Rp ${total.toLocaleString()}*
+/* ========== CLEAR CART ========== */
+document.getElementById("clearCart").onclick = ()=>{
+  cart = [];
+  localStorage.setItem("savalory_cart", JSON.stringify(cart));
+  renderCart();
+};
+
+
+/* ========== ADMIN ========== */
+document.getElementById("adminBtn").onclick = ()=> document.getElementById("modalBackdrop").classList.add("show");
+document.getElementById("closeModal").onclick = ()=> document.getElementById("modalBackdrop").classList.remove("show");
+
+document.getElementById("doLogin").onclick = ()=>{
+  if(document.getElementById("adminPassword").value === settings.adminPass){
+    document.getElementById("adminLogin").style.display = "none";
+    document.getElementById("adminPanel").style.display = "block";
+    renderAdminList();
+  } else alert("Password salah");
+};
+
+function renderAdminList(){
+  const t = document.getElementById("adminList");
+  t.innerHTML = `<tr><th>Nama</th><th>Harga</th><th>Kategori</th><th>Aksi</th></tr>`;
+  menu.forEach((m,i)=>{
+    t.innerHTML += `
+      <tr>
+        <td><input value="${m.name}" oninput="menu[${i}].name=this.value"></td>
+        <td><input type="number" value="${m.price}" oninput="menu[${i}].price=this.value"></td>
+        <td>
+          <select onchange="menu[${i}].category=this.value">
+            <option ${m.category=='Makanan'?'selected':''}>Makanan</option>
+            <option ${m.category=='Minuman'?'selected':''}>Minuman</option>
+          </select>
+        </td>
+        <td><button onclick="del(${i})">Hapus</button></td>
+      </tr>`;
+  });
+}
+
+Catatan: ${note || "-"}
+`;
+function del(i){
+  menu.splice(i,1);
+  saveMenu();
+  renderAdminList();
+}
+
+  window.open("https://wa.me/"+wa+"?text="+encodeURIComponent(msg), "_blank");
+document.getElementById("addItem").onclick = ()=>{
+  menu.push({
+    id: genId(),
+    name: newName.value,
+    price: Number(newPrice.value),
+    category: newCat.value,
+    img: newImg.value
+  });
+  saveMenu();
+  renderMenu();
+  renderAdminList();
+};
+
+  cart = [];
+  save("savalory_cart", cart);
+  renderCart();
+  renderCartCount();
+});
+document.getElementById("saveDiscount").onclick = ()=>{
+  settings.discount = Number(globalDiscount.value);
+  localStorage.setItem("savalory_settings",JSON.stringify(settings));
+  updateTotal();
+};
+
+// ===================
+// FIRST LOAD
+// ===================
+renderMenu();
+renderCart();
+renderCartCount();
+document.getElementById("discount").value = settings.discount;
+function saveMenu(){
+  localStorage.setItem("savalory_menu", JSON.stringify(menu));
+}
+document.getElementById("resetDefault").onclick=()=>{
+  menu = DEFAULT_MENU;
+  saveMenu();
+  renderMenu();
+  renderAdminList();
+};
+document.getElementById("exportMenu").onclick = ()=>{
+  const blob = new Blob([JSON.stringify(menu,null,2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "menu.json";
+  a.click();
+};
+</script>
+
+</body>
 </html>

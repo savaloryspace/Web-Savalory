@@ -1,163 +1,442 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Savalory - F&B Ordering System</title>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Savalory — Order Food (Single Page)</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-/* ========= GLOBAL STYLE ========= */
-:root{ --bg:#f7f7f8; --card:#fff; --text:#222; --muted:#666; --primary:#D44A43; }
-[data-theme="dark"]{ --bg:#0f1720; --card:#0b1220; --text:#e6eef8; --muted:#9fb3c8; --primary:#ff6b5b; }
-
-*{box-sizing:border-box}
-body{font-family:'Inter',sans-serif;margin:0;background:var(--bg);color:var(--text)}
-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--card);border-bottom:1px solid rgba(0,0,0,0.04);position:sticky;top:0;z-index:80}
-.brand{font-weight:700;font-size:18px;display:flex;gap:10px;align-items:center}
-.actions{display:flex;gap:10px;align-items:center}
-.btn{padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:600}
-.btn-ghost{background:transparent;border:1px solid rgba(0,0,0,0.06)}
-.btn-primary{background:var(--primary);color:#fff}
-.icon-btn{background:transparent;border:none;cursor:pointer}
-
-main{padding:20px;max-width:1100px;margin:0 auto}
-.hero{display:flex;gap:20px;align-items:center;justify-content:space-between;margin-bottom:18px}
-.promo{background:var(--primary);color:#fff;padding:18px;border-radius:12px;min-width:200px;text-align:center}
-
-/* menu */
-.filters{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.filter-btn{padding:8px 12px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:var(--card);cursor:pointer}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.04);display:flex;flex-direction:column;gap:10px;position:relative}
-.thumb{height:140px;border-radius:10px;object-fit:cover;width:100%}
-.add{margin-top:auto;padding:10px;border-radius:8px;background:var(--primary);color:#fff;border:none;cursor:pointer}
-
-/* cart panel */
-.cart-panel{position:fixed;right:16px;top:70px;width:420px;max-width:94%;height:calc(100vh - 120px);background:var(--card);border-radius:12px;box-shadow:0 20px 60px rgba(2,6,23,0.2);transform:translateX(110%);transition:transform .35s}
-.cart-panel.open{transform:translateX(0)}
-.cart-item{display:flex;gap:10px;align-items:center;padding:8px;border-bottom:1px dashed rgba(0,0,0,0.06)}
-
-.checkout-btn{width:100%;padding:12px;border-radius:10px;border:none;background:var(--primary);color:#fff}
-
-/* admin modal */
-.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:150}
-.modal{background:var(--card);padding:16px;border-radius:12px;width:820px;max-width:94%}
-.show{display:flex}
-
-.admin-table{width:100%;border-collapse:collapse;margin-top:10px}
-.admin-table th,.admin-table td{padding:8px;border-bottom:1px solid rgba(0,0,0,0.06);text-align:left}
-
-@media (max-width:700px){
-  .hero{flex-direction:column}
-  .cart-panel{width:92%}
+/* ------------------ GLOBAL STYLE ------------------ */
+:root {
+  --primary: #ff9d00;
+  --dark-bg: #161b22;
+  --dark-card: #1f2630;
+  --light-bg: #ffffff;
+  --light-card: #f6f6f6;
 }
+
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: var(--light-bg);
+  transition: 0.3s;
+}
+
+.dark {
+  background: var(--dark-bg);
+  color: white;
+}
+
+/* NAVBAR */
+nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 20px;
+  background: var(--primary);
+  color: white;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+nav .cart {
+  cursor: pointer;
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: red;
+  color: #fff;
+  border-radius: 50%;
+  padding: 2px 7px;
+  font-size: 12px;
+}
+
+/* MENU CARD */
+.menu-container {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+.card {
+  background: var(--light-card);
+  border-radius: 15px;
+  padding: 10px;
+  transition: 0.3s;
+}
+
+.dark .card { background: var(--dark-card); }
+
+.card img {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.card button {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  background: var(--primary);
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.card button.disabled {
+  background: gray;
+  cursor: not-allowed;
+}
+
+/* FILTER BUTTON */
+.category-btns {
+  text-align: center;
+  padding: 10px;
+}
+
+.category-btns button {
+  border: none;
+  padding: 8px 15px;
+  margin: 4px;
+  border-radius: 20px;
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
+}
+
+/* CART POPUP */
+#cartPopup {
+  display: none;
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100vh;
+  width: 360px;
+  background: white;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  z-index: 50;
+}
+
+.dark #cartPopup {
+  background: var(--dark-card);
+  color: white;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Checkout Form */
+form {
+  padding: 15px;
+  background: var(--light-card);
+  border-radius: 12px;
+}
+
+.dark form { background: var(--dark-card); }
+
+form input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 12px;
+}
+
+/* ADMIN PANEL */
+#adminPanel {
+  display: none;
+  padding: 20px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th, .admin-table td {
+  border-bottom: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+.toggle-dark {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  padding: 10px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+}
+  :root{
+    --bg:#f7f7f8; --card:#fff; --text:#222; --muted:#666; --primary:#D44A43;
+    --glass: rgba(255,255,255,0.7);
+  }
+  [data-theme="dark"]{
+    --bg:#0f1720; --card:#0b1220; --text:#e6eef8; --muted:#9fb3c8; --primary:#ff6b5b; --glass: rgba(10,12,15,0.6);
+  }
+  *{box-sizing:border-box}
+  body{font-family:'Inter',sans-serif;margin:0;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;}
+  header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--card);border-bottom:1px solid rgba(0,0,0,0.04);position:sticky;top:0;z-index:80}
+  .brand{font-weight:700;font-size:18px;display:flex;gap:10px;align-items:center}
+  .actions{display:flex;gap:10px;align-items:center}
+  .btn{padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:600}
+  .btn-ghost{background:transparent;border:1px solid rgba(0,0,0,0.06)}
+  .btn-primary{background:var(--primary);color:#fff}
+  .icon-btn{background:transparent;border:none;cursor:pointer}
+  main{padding:20px;max-width:1100px;margin:0 auto}
+  .hero{display:flex;gap:20px;align-items:center;justify-content:space-between;margin-bottom:18px}
+  .promo{background:var(--primary);color:#fff;padding:18px;border-radius:12px;min-width:200px;text-align:center}
+  .section-title{font-size:18px;margin:10px 0 14px}
+  .filters{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+  .filter-btn{padding:8px 12px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:var(--card);cursor:pointer}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+  .card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.04);display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden}
+  .thumb{height:140px;border-radius:10px;object-fit:cover;width:100%}
+  .name-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .muted{color:var(--muted);font-size:13px}
+  .price{font-weight:700}
+  .add{margin-top:auto;padding:10px;border-radius:8px;background:var(--primary);color:#fff;border:none;cursor:pointer}
+  /* cart icon */
+  .cart-wrap{position:relative}
+  .cart-badge{position:absolute;right:-8px;top:-8px;background:var(--primary);color:#fff;border-radius:999px;padding:4px 7px;font-size:12px}
+  /* cart panel */
+  .cart-panel{position:fixed;right:16px;top:70px;width:360px;max-width:94%;height:calc(100vh - 120px);background:var(--card);border-radius:12px;box-shadow:0 20px 60px rgba(2,6,23,0.2);transform:translateX(110%);transition:transform .35s ease;z-index:120;padding:14px;display:flex;flex-direction:column}
+  .cart-panel.open{transform:translateX(0)}
+  .cart-list{flex:1;overflow:auto;padding:6px 4px}
+  .cart-item{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px}
+  .qty{display:flex;gap:6px;align-items:center}
+  .small-btn{padding:6px 8px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:transparent;cursor:pointer}
+  .total-row{display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px dashed rgba(0,0,0,0.06);margin-top:8px}
+  .checkout-btn{width:100%;padding:12px;border-radius:10px;border:none;background:var(--primary);color:#fff;cursor:pointer}
+  /* admin modal */
+  .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center;z-index:150}
+  .modal{background:var(--card);padding:16px;border-radius:12px;width:520px;max-width:94%}
+  .show{display:flex}
+  .row{display:flex;gap:8px;align-items:center}
+  input[type="text"],input[type="number"],select{padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);width:100;background:transparent;color:var(--text)}
+  label{font-size:13px;color:var(--muted)}
+  .admin-actions{display:flex;gap:8px;margin-top:8px}
+  .small{font-size:13px;padding:6px 8px}
+  /* loading overlay */
+  .loading-backdrop{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);z-index:200}
+  .loading{width:320px;max-width:90%;background:var(--card);padding:18px;border-radius:12px;text-align:center}
+  .progress{height:10px;background:#eee;border-radius:999px;overflow:hidden;margin-top:12px}
+  .bar{height:100%;width:0%;background:var(--primary);transition:width .3s linear}
+  /* responsive */
+  @media (max-width:700px){
+    .hero{flex-direction:column;align-items:stretch}
+    .cart-panel{right:10px;top:70px;width:92%}
+    header{padding:10px}
+  }
 </style>
 </head>
-
 <body>
 
+<!-- NAV -->
+<nav>
+  <span onclick="showAdminLogin()">ADMIN</span>
+  SAVALORY ORDER
+  <div class="cart" onclick="openCart()">
+    🛒<span class="cart-badge" id="cartCount">0</span>
 <header>
-  <div class="brand">SAVALORY <span style="font-size:12px;color:var(--muted)">Order Food</span></div>
+  <div class="brand">
+    <div>SAVALORY</div>
+    <div style="font-size:12px;color:var(--muted)">Order Food • No login</div>
+  </div>
+</nav>
+
+<!-- FILTER MENU -->
+<div class="category-btns">
+  <button onclick="filterMenu('all')">Semua</button>
+  <button onclick="filterMenu('makanan')">Makanan</button>
+  <button onclick="filterMenu('minuman')">Minuman</button>
+</div>
+
+<!-- MENU LIST -->
+<div class="menu-container" id="menuList"></div>
   <div class="actions">
-    <button id="themeToggle" class="btn btn-ghost">🌙</button>
-    <button id="adminBtn" class="btn btn-ghost">Admin</button>
-    <button id="openCart" class="btn btn-ghost">🛒</button>
-    <div id="cartCount" class="cart-badge" style="color:white"></div>
+    <button class="btn btn-ghost" id="themeToggle" title="Toggle theme">🌙</button>
+    <button class="btn btn-ghost" id="adminBtn" title="Admin panel">Admin</button>
+
+<!-- CART POPUP -->
+<div id="cartPopup">
+  <h2>🛒 Keranjang</h2>
+  <div id="cartItems"></div>
+  <h3>Total: Rp <span id="totalPrice">0</span></h3>
+
+  <form id="checkoutForm">
+    <input type="text" placeholder="Nama Pemesan" required>
+    <input type="text" placeholder="Nomor Meja" required>
+    <input type="text" placeholder="No WhatsApp" required>
+    <button type="button" onclick="checkoutOrder()">Checkout</button>
+  </form>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel">
+  <h2>PANEL ADMIN</h2>
+    <div class="cart-wrap" style="margin-left:6px">
+      <button id="openCart" class="icon-btn" title="Open cart">🛒</button>
+      <div id="cartCount" class="cart-badge" style="display:none">0</div>
+    </div>
   </div>
 </header>
-
 
 <main>
   <section class="hero">
     <div>
-      <h2>Menu Populer</h2>
-      <div id="filters" class="filters"></div>
-      <div id="menuGrid" class="grid"></div>
+      <h2 class="section-title">Menu Populer</h2>
+      <div class="filters" id="filters"></div>
+      <div class="grid" id="menuGrid"></div>
     </div>
-
     <div class="promo">
-      <h3 style="margin:0">20% OFF</h3>
-      <small>Gunakan diskon dari Admin</small>
+      <div style="font-size:22px;font-weight:700">20% OFF</div>
+      <div style="font-size:13px;margin-top:6px">Gunakan diskon tertentu dari Admin</div>
     </div>
   </section>
 
-  <!-- CART -->
-  <aside id="cartPanel" class="cart-panel">
-    <h3>Keranjang</h3>
-    <div id="cartList"></div>
+  <!-- cart panel -->
+  <aside id="cartPanel" class="cart-panel" aria-hidden="true">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <strong>Keranjang</strong>
+      <div>
+        <button id="closeCart" class="small-btn">Close</button>
+      </div>
+    </div>
 
-    <div style="margin-top:10px">
-      <b>Subtotal :</b> <span id="subtotalText">Rp 0</span> <br>
-      <b>Diskon :</b> <span id="appliedDiscount">0%</span> <br>
-      <h3>Total : <span id="totalText">Rp 0</span></h3>
+    <div class="cart-list" id="cartList"></div>
 
-      <label>Nama</label>
-      <input type="text" id="custName">
+    <div style="margin-top:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <label class="muted">Diskon (%)</label>
+          <div id="appliedDiscount" style="font-weight:700">0%</div>
+        </div>
+        <div style="text-align:right">
+          <div class="muted">Subtotal</div>
+          <div id="subtotalText" style="font-weight:700">Rp 0</div>
+        </div>
+      </div>
 
-      <label>No Meja / Takeaway</label>
-      <input type="text" id="custTable">
+      <div class="total-row">
+        <div class="muted">Total</div>
+        <div id="totalText" style="font-weight:800">Rp 0</div>
+      </div>
 
-      <label>Nomor WhatsApp Admin</label>
-      <input type="text" id="custWA" placeholder="628xxx">
-
-      <label>Catatan (opsional)</label>
-      <textarea id="custNote"></textarea>
-
-      <button id="checkoutBtn" class="checkout-btn">Pesan via WhatsApp</button>
-      <button id="clearCart" class="btn-ghost" style="width:100%;margin-top:6px">Bersihkan Keranjang</button>
+      <div style="margin-top:10px">
+        <label class="muted">Nama Pelanggan</label>
+        <input id="custName" type="text" placeholder="Nama lengkap">
+        <label class="muted" style="margin-top:6px">No Meja</label>
+        <input id="custTable" type="text" placeholder="Contoh: 5">
+        <label class="muted" style="margin-top:6px">No WhatsApp Admin (contoh: 628123...)</label>
+        <input id="custWA" type="text" placeholder="Nomor tujuan pesanan">
+        <div style="margin-top:10px;display:flex;gap:8px">
+          <button id="checkoutBtn" class="checkout-btn">Pesan Sekarang</button>
+          <button id="clearCart" class="small-btn">Bersihkan</button>
+        </div>
+      </div>
     </div>
   </aside>
 
-
-  <!-- ADMIN MODAL -->
-  <div id="modalBackdrop" class="modal-backdrop">
-    <div class="modal">
-      <h3>Admin Panel</h3>
-      <button id="closeModal" class="btn-ghost">Close</button>
-
-      <div id="adminLogin">
-        <label>Password Admin</label>
-        <input type="password" id="adminPassword">
-        <button id="doLogin" class="btn-primary">Login</button>
+  <!-- admin modal -->
+  <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-hidden="true">
+    <div class="modal" id="adminModal">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <strong>Admin Panel</strong>
+        <button id="closeModal" class="small-btn">X</button>
       </div>
 
-      <div id="adminPanel" style="display:none;margin-top:20px">
-        <h4>Tambah Menu</h4>
+      <!-- login -->
+      <div id="adminLogin">
+        <label class="muted">Password Admin</label>
+        <input id="adminPassword" type="password" placeholder="Masukkan password">
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <button id="doLogin" class="btn btn-primary small">Login</button>
+          <button id="importBtn" class="small-btn">Import Menu (JSON)</button>
+        </div>
+        <div style="font-size:12px;margin-top:8px;color:var(--muted)">
+          Password default: <code>admin123</code> (ubah di panel setelah login)
+        </div>
+      </div>
 
-        <input id="newName" placeholder="Nama">
-        <input id="newPrice" type="number" placeholder="Harga">
+      <!-- control -->
+      <div id="adminPanel" style="display:none">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+          <div style="flex:1">
+            <label class="muted">Tambah Item (nama | harga | kategori | gambar)</label>
+            <div style="display:flex;gap:6px">
+              <input id="newName" type="text" placeholder="Nama">
+              <input id="newPrice" type="number" placeholder="Harga" style="width:100px">
+              <input id="newCat" type="text" placeholder="Kategori" style="width:100px">
+            </div>
+            <input id="newImg" type="text" placeholder="URL gambar (opsional)" style="margin-top:6px">
+            <div style="margin-top:6px">
+              <button id="addItem" class="btn">Tambah Item</button>
+              <button id="saveMenu" class="btn btn-ghost small">Simpan Menu ke Local</button>
+            </div>
+          </div>
+        </div>
 
-        <!-- ✅ KATEGORI DIGANTI SELECT -->
-        <select id="newCat">
-          <option value="Makanan">Makanan</option>
-          <option value="Minuman">Minuman</option>
-        </select>
+        <div style="margin-top:10px">
+          <label class="muted">Atur Diskon Global (%)</label>
+          <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+            <input id="globalDiscount" type="number" min="0" max="100" style="width:100px">
+            <button id="saveDiscount" class="small-btn">Simpan</button>
+          </div>
+        </div>
 
-        <input id="newImg" placeholder="URL gambar">
+        <div style="margin-top:12px">
+          <label class="muted">Daftar Menu (klik Edit untuk ubah)</label>
+          <div id="adminList" style="max-height:220px;overflow:auto;margin-top:8px"></div>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <button id="exportMenu" class="small-btn">Export JSON</button>
+            <button id="resetDefault" class="small-btn">Reset Default</button>
+          </div>
+        </div>
 
-        <button id="addItem" class="btn-primary" style="margin-top:10px">Tambah Item</button>
-
-        <hr>
-
-        <label>Diskon (%)</label>
-        <input type="number" id="globalDiscount" min="0" max="100">
-        <button id="saveDiscount" class="btn-ghost">Simpan</button>
-
-        <h4>Daftar Menu</h4>
-        <table id="adminList" class="admin-table"></table>
-
-        <button id="exportMenu" class="btn">Export JSON</button>
-        <button id="resetDefault" class="btn-ghost">Reset Default</button>
       </div>
     </div>
   </div>
+
+  <table class="admin-table" id="adminTable"></table>
+</div>
+  <!-- loading overlay -->
+  <div id="loadingBackdrop" class="loading-backdrop">
+    <div class="loading">
+      <div id="loadingText">Memproses pesanan...</div>
+      <div class="progress"><div id="loadingBar" class="bar"></div></div>
+    </div>
+  </div>
+
+<button class="toggle-dark" onclick="toggleDarkMode()">🌓</button>
 </main>
 
-
 <script>
-/* ==============================
-      INITIAL DATA (DEFAULT)
-================================ */
+/* Data menu */
+let menu = [
+  { id:1, name:"Nasi Goreng", category:"makanan", price:15000, soldOut:false },
+  { id:2, name:"Mie Ayam", category:"makanan", price:18000, soldOut:false },
+  { id:3, name:"Es Teh", category:"minuman", price:5000, soldOut:false },
+  { id:4, name:"Cappuccino", category:"minuman", price:14000, soldOut:false }
+/* ===========================
+   INITIAL MENU (DEFAULT)
+   =========================== */
 const DEFAULT_MENU = [
   { id: genId(), name:"Mie Goreng", price:15000, category:"Makanan", img:"https://images.unsplash.com/photo-1604908177522-04f9a5a1d1d1?auto=format&fit=crop&w=800&q=60" },
   { id: genId(), name:"Nasi Ayam", price:22000, category:"Makanan", img:"https://images.unsplash.com/photo-1604908177578-6d6b1f1c9b1f?auto=format&fit=crop&w=800&q=60" },
@@ -165,198 +444,400 @@ const DEFAULT_MENU = [
   { id: genId(), name:"Lemon Tea", price:12000, category:"Minuman", img:"https://images.unsplash.com/photo-1562007908-dc7b4b5d9b6a?auto=format&fit=crop&w=800&q=60" }
 ];
 
-function genId(){ return 'i_'+Math.random().toString(36).slice(2,9) }
+let cart = [];
 
-let menu = JSON.parse(localStorage.getItem("savalory_menu")) || DEFAULT_MENU;
-let cart = JSON.parse(localStorage.getItem("savalory_cart")) || [];
-let settings = JSON.parse(localStorage.getItem("savalory_settings")) || {discount:0, adminPass:"savalory123"};
+/* RENDER MENU */
+function renderMenu(filter = "all") {
+  const container = document.getElementById("menuList");
+  container.innerHTML = "";
 
+  menu.filter(m => filter === "all" || m.category === filter)
+      .forEach(item => {
+        container.innerHTML += `
+        <div class='card'>
+          <img src="https://via.placeholder.com/200x150" />
+          <h3>${item.name}</h3>
+          <p>Rp ${item.price.toLocaleString()}</p>
+          <button class="${item.soldOut ? "disabled":""}"
+            onclick="addToCart(${item.id})"
+            ${item.soldOut ? "disabled":""}>
+            ${item.soldOut ? "SOLD OUT" : "Tambah"}
+          </button>
+        </div>`;
+      });
+function genId(){return 'i_'+Math.random().toString(36).slice(2,9)}
 
-/* ========== THEME ========== */
+/* ===========================
+   STATE (localStorage backed)
+   =========================== */
+let menu = load('savalory_menu') || DEFAULT_MENU;
+let cart = load('savalory_cart') || [];
+let settings = load('savalory_settings') || {discount:0, adminPass:'admin123', theme:'light'};
+
+/* ===========================
+   UTIL
+   =========================== */
+function save(key,val){localStorage.setItem(key,JSON.stringify(val))}
+function load(key){try{return JSON.parse(localStorage.getItem(key))}catch(e){return null}}
+
+/* ===========================
+   THEME
+   =========================== */
+const themeToggle = document.getElementById('themeToggle');
 function applyTheme(){
-  document.documentElement.setAttribute("data-theme",
-    document.documentElement.getAttribute("data-theme")==="dark" ? "light" : "dark"
-  );
+  const t = settings.theme || 'light';
+  document.documentElement.setAttribute('data-theme', t==='dark' ? 'dark' : 'light');
+  themeToggle.textContent = t==='dark' ? '☀️' : '🌙';
 }
-document.getElementById("themeToggle").onclick = applyTheme;
+themeToggle.addEventListener('click', ()=>{
+  settings.theme = (settings.theme==='dark') ? 'light' : 'dark';
+  save('savalory_settings', settings); applyTheme();
+});
+applyTheme();
 
+/* ===========================
+   RENDER FILTERS & MENU
+   =========================== */
+const filtersEl = document.getElementById('filters');
+const menuGrid = document.getElementById('menuGrid');
 
-/* ========== FILTER & MENU RENDER ========== */
+function uniqueCategories(){
+  const cats = new Set(menu.map(i=>i.category||'Uncategorized')); return ['All', ...cats];
+}
 function renderFilters(){
-  const cats = [...new Set(menu.map(i => i.category))];
-  document.getElementById("filters").innerHTML =
-    `<button class="filter-btn" onclick="renderMenu()">All</button>` +
-    cats.map(c => `<button class="filter-btn" onclick="renderMenu('${c}')">${c}</button>`).join("");
-}
-
-function renderMenu(filter=null){
-  const list = filter ? menu.filter(m => m.category === filter) : menu;
-  const grid = document.getElementById("menuGrid");
-  grid.innerHTML = "";
-
-  list.forEach(item => {
-    grid.innerHTML += `
-      <div class="card">
-        <img class="thumb" src="${item.img}">
-        <b>${item.name}</b>
-        <small>${item.category}</small>
-        <b>Rp ${item.price.toLocaleString()}</b>
-        <button class="add" onclick="addToCart('${item.id}')">Tambah</button>
-      </div>`;
+  filtersEl.innerHTML = '';
+  uniqueCategories().forEach(cat=>{
+    const b = document.createElement('button');
+    b.className='filter-btn';
+    b.textContent = cat;
+    b.onclick = ()=>renderMenu(cat);
+    filtersEl.appendChild(b);
   });
 }
-renderFilters();
 renderMenu();
 
+/* ADD CART */
+function addToCart(id) {
+  let item = menu.find(x => x.id === id);
+  cart.push(item);
 
-/* ========== CART ========== */
-function addToCart(id){
-  const item = menu.find(i => i.id===id);
-  const exist = cart.find(i => i.id===id);
-  if(exist) exist.qty++;
-  else cart.push({...item, qty:1});
-
-  localStorage.setItem("savalory_cart", JSON.stringify(cart));
-  renderCart();
+  document.getElementById("cartCount").innerText = cart.length;
+function renderMenu(filter='All'){
+  menuGrid.innerHTML = '';
+  const list = (filter==='All') ? menu : menu.filter(i=>i.category===filter);
+  list.forEach(item=>{
+    const c = document.createElement('div'); c.className='card';
+    c.innerHTML = `
+      <img class="thumb" src="${item.img||''}" alt="${item.name}" onerror="this.style.display='none'">
+      <div class="name-row"><div><h3 style="margin:0">${item.name}</h3><div class="muted">${item.category||'Umum'}</div></div><div class="price">Rp ${Number(item.price).toLocaleString()}</div></div>
+      <p class="muted">${item.desc||''}</p>
+      <button class="add" data-id="${item.id}" data-name="${escapeHtml(item.name)}" data-price="${item.price}">Tambah</button>
+    `;
+    menuGrid.appendChild(c);
+  });
+  // bind add buttons (after render)
+  document.querySelectorAll('.add').forEach(btn=>{
+    btn.addEventListener('click', (ev)=>{
+      const id = btn.dataset.id;
+      const name = btn.dataset.name;
+      const price = Number(btn.dataset.price);
+      const thumb = btn.closest('.card').querySelector('.thumb');
+      addToCart({id,name,price,img: thumb ? thumb.src : null}, btn);
+    });
+  });
+  renderCartCount();
 }
+
+/* ===========================
+   CART LOGIC
+   =========================== */
+const cartPanel = document.getElementById('cartPanel');
+const openCart = document.getElementById('openCart');
+const closeCart = document.getElementById('closeCart');
+const cartCountEl = document.getElementById('cartCount');
+
+openCart.addEventListener('click', ()=>{cartPanel.classList.add('open');});
+closeCart.addEventListener('click', ()=>{cartPanel.classList.remove('open');});
 
 function renderCart(){
-  const c = document.getElementById("cartList");
-  c.innerHTML = "";
-
-  if(cart.length===0){ c.innerHTML = "<i>Keranjang kosong</i>"; return;}
-
-  cart.forEach((i,ix)=>{
-    c.innerHTML += `
-      <div class="cart-item">
-        <div>${i.name}<br><small>Rp ${i.price}</small></div>
-        <div style="margin-left:auto">
-          <button onclick="qty(${ix},-1)">-</button>
-          ${i.qty}
-          <button onclick="qty(${ix},1)">+</button>
+  const listEl = document.getElementById('cartList'); listEl.innerHTML='';
+  if(cart.length===0){ listEl.innerHTML = '<div class="muted" style="padding:8px">Keranjang kosong</div>'; updateTotals(); return; }
+  cart.forEach((it, idx)=>{
+    const row = document.createElement('div'); row.className='cart-item';
+    row.innerHTML = `
+      <div style="flex:1">
+        <div style="font-weight:700">${it.name}</div>
+        <div class="muted">Rp ${Number(it.price).toLocaleString()}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <div class="qty">
+          <button class="small-btn" data-action="dec" data-idx="${idx}">-</button>
+          <div style="padding:6px 8px;border-radius:8px">${it.qty}</div>
+          <button class="small-btn" data-action="inc" data-idx="${idx}">+</button>
         </div>
-      </div>`;
+        <button class="small-btn" data-action="rem" data-idx="${idx}">Hapus</button>
+      </div>
+    `;
+    listEl.appendChild(row);
   });
-
-  updateTotal();
+  // bind qty buttons
+  listEl.querySelectorAll('[data-action]').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      const action = btn.dataset.action; const idx = Number(btn.dataset.idx);
+      if(action==='inc') cart[idx].qty++;
+      if(action==='dec'){ cart[idx].qty = Math.max(1, cart[idx].qty-1); }
+      if(action==='rem'){ cart.splice(idx,1); }
+      save('savalory_cart', cart); renderCart(); renderCartCount();
+    });
+  });
+  updateTotals();
 }
-function qty(i,x){
-  cart[i].qty = Math.max(1, cart[i].qty + x);
-  localStorage.setItem("savalory_cart", JSON.stringify(cart));
+
+function updateTotals(){
+  const subtotal = cart.reduce((s,i)=>s + (i.price * (i.qty||1)), 0);
+  const discount = Number(settings.discount || 0); // percent
+  const total = Math.round(subtotal * (1 - discount/100));
+  document.getElementById('subtotalText').textContent = 'Rp ' + subtotal.toLocaleString();
+  document.getElementById('appliedDiscount').textContent = (discount||0) + '%';
+  document.getElementById('totalText').textContent = 'Rp ' + total.toLocaleString();
+}
+
+/* add to cart with flying animation */
+function addToCart(item, btn){
+  // find existing
+  const found = cart.find(i=>i.id===item.id);
+  if(found){ found.qty = (found.qty||1) + 1; }
+  else{ cart.push({...item, qty:1}); }
+  save('savalory_cart', cart);
+  renderCartCount();
   renderCart();
 }
 
-function updateTotal(){
-  const subtotal = cart.reduce((a,b)=>a+b.price*b.qty,0);
-  const total = Math.round(subtotal - (subtotal * (settings.discount/100)));
-
-  document.getElementById("subtotalText").textContent = "Rp "+subtotal.toLocaleString();
-  document.getElementById("totalText").textContent = "Rp "+total.toLocaleString();
-  document.getElementById("appliedDiscount").textContent = settings.discount+"%";
+/* OPEN CART */
+function openCart() {
+  document.getElementById("cartPopup").style.display = "block";
 }
-renderCart();
 
+/* RENDER CART */
+function renderCart() {
+  let list = document.getElementById("cartItems");
+  let total = cart.reduce((a,b)=>a+b.price,0);
+  list.innerHTML = "";
+  cart.forEach(c=>{
+    list.innerHTML += `<div class="cart-item"><span>${c.name}</span> <span>Rp ${c.price}</span></div>`;
+  })
+  document.getElementById("totalPrice").innerText = total;
+}
 
-/* ========== CHECKOUT WA ========== */
-document.getElementById("checkoutBtn").onclick = ()=>{
-  const wa = document.getElementById("custWA").value;
-  const name = document.getElementById("custName").value;
-  const meja = document.getElementById("custTable").value;
-  const note = document.getElementById("custNote").value;
+/* CHECKOUT PROGRESS */
+function checkoutOrder() {
+  alert("✅ Pesanan berhasil! (Google Sheets integration next)");
+  // flying animation
+  const rect = btn.getBoundingClientRect();
+  const cartBtn = document.getElementById('openCart');
+  const cartRect = cartBtn.getBoundingClientRect();
+  const fly = document.createElement('div');
+  fly.style.position='fixed'; fly.style.left = rect.left+'px'; fly.style.top = rect.top+'px';
+  fly.style.width='40px'; fly.style.height='40px'; fly.style.borderRadius='8px';
+  fly.style.background='var(--primary)'; fly.style.opacity='0.95'; fly.style.zIndex=9999;
+  document.body.appendChild(fly);
+  const dx = cartRect.left - rect.left; const dy = cartRect.top - rect.top;
+  fly.animate([{transform:'translate(0,0) scale(1)', opacity:1},{transform:`translate(${dx}px,${dy}px) scale(.2)`, opacity:0}],{duration:700,easing:'cubic-bezier(.2,.7,.2,1)'});
+  setTimeout(()=>fly.remove(),750);
+}
 
-  let pesan = `Halo Admin, saya ingin pesan:%0A`;
-  cart.forEach(i=>{
-    pesan += `- ${i.name} x ${i.qty} (Rp ${i.price})%0A`;
+/* cart count */
+function renderCartCount(){
+  const count = cart.reduce((s,i)=>s + (i.qty||1), 0);
+  if(count>0){ cartCountEl.style.display='block'; cartCountEl.textContent = count; } else cartCountEl.style.display='none';
+}
+
+/* clear cart */
+document.getElementById('clearCart').addEventListener('click', ()=>{
+  if(confirm('Bersihkan keranjang?')){ cart = []; save('savalory_cart', cart); renderCart(); renderCartCount(); }
+});
+
+/* checkout */
+const loadingBackdrop = document.getElementById('loadingBackdrop');
+const loadingBar = document.getElementById('loadingBar');
+function fakeLoading(duration=1600){
+  loadingBackdrop.style.display='flex'; loadingBar.style.width='0%';
+  return new Promise((res)=>{
+    let t=0; const step = 40; const inc = 100/(duration/step);
+    const iv = setInterval(()=>{ t += inc; loadingBar.style.width = Math.min(100,t)+'%'; if(t>=100){ clearInterval(iv); setTimeout(()=>{ loadingBackdrop.style.display='none'; loadingBar.style.width='0%'; res(); },300); } }, step);
   });
+}
 
-  pesan += `%0ATotal: ${document.getElementById("totalText").textContent}`;
-  pesan += `%0ANama: ${name}%0AMeja/Takeaway: ${meja}%0ACatatan: ${note}`;
+/* FILTER MENU */
+function filterMenu(cat) {
+  renderMenu(cat);
+document.getElementById('checkoutBtn').addEventListener('click', async ()=>{
+  if(cart.length===0){ alert('Keranjang kosong'); return; }
+  const name = document.getElementById('custName').value.trim();
+  const meja = document.getElementById('custTable').value.trim();
+  const wa = document.getElementById('custWA').value.trim();
+  if(!name || !meja || !wa){ alert('Lengkapi data pelanggan (nama, meja, nomor WA)'); return; }
 
-  window.open("https://wa.me/"+wa+"?text="+pesan);
-};
+  // show loading
+  await fakeLoading(1400);
 
+  // prepare message for WA
+  const subtotal = cart.reduce((s,i)=>s + (i.price*(i.qty||1)), 0);
+  const discount = Number(settings.discount||0);
+  const total = Math.round(subtotal * (1 - discount/100));
+  const itemsText = cart.map(i=>`${i.qty}x ${i.name} - Rp ${ (i.price * i.qty).toLocaleString() }`).join('%0A');
+  const text = encodeURIComponent(`Pesanan:%0A${cart.map(i=>`${i.qty}x ${i.name} - Rp ${i.price.toLocaleString()}`).join('%0A')}%0A%0ASubtotal: Rp ${subtotal.toLocaleString()}%0ADiskon: ${discount}%0ATotal: Rp ${total.toLocaleString()}%0A%0ANama: ${name}%0AMeja: ${meja}`);
+  // save order locally (admin can view later)
+  const orders = load('savalory_orders') || [];
+  orders.push({id:Date.now(), name, meja, wa, items: cart, subtotal, discount, total, ts:new Date()});
+  save('savalory_orders', orders);
 
+  // open whatsapp (new tab)
+  window.open(`https://wa.me/${wa}?text=${text}`, '_blank');
 
-/* ========== CLEAR CART ========== */
-document.getElementById("clearCart").onclick = ()=>{
-  cart = [];
-  localStorage.setItem("savalory_cart", JSON.stringify(cart));
-  renderCart();
-};
+  // clear cart
+  cart = []; save('savalory_cart', cart); renderCart(); renderCartCount();
+  cartPanel.classList.remove('open');
+});
 
+/* ===========================
+   ADMIN PANEL
+   =========================== */
+const adminBtn = document.getElementById('adminBtn');
+const modalBackdrop = document.getElementById('modalBackdrop');
+const adminLogin = document.getElementById('adminLogin');
+const adminPanel = document.getElementById('adminPanel');
+const doLogin = document.getElementById('doLogin');
+const adminPassword = document.getElementById('adminPassword');
+const closeModal = document.getElementById('closeModal');
+adminBtn.addEventListener('click', ()=>{ modalBackdrop.classList.add('show'); modalBackdrop.setAttribute('aria-hidden', 'false'); });
+closeModal.addEventListener('click', ()=>{ modalBackdrop.classList.remove('show'); modalBackdrop.setAttribute('aria-hidden', 'true'); });
+document.getElementById('importBtn').addEventListener('click', ()=>{
+  const j = prompt('Paste JSON menu di sini (array of items).'); try{ const arr = JSON.parse(j); menu = arr; save('savalory_menu', menu); renderFilters(); renderMenu(); alert('Import sukses'); }catch(e){alert('JSON invalid');}
+});
 
-/* ========== ADMIN ========== */
-document.getElementById("adminBtn").onclick = ()=> document.getElementById("modalBackdrop").classList.add("show");
-document.getElementById("closeModal").onclick = ()=> document.getElementById("modalBackdrop").classList.remove("show");
+doLogin.addEventListener('click', ()=>{
+  const val = adminPassword.value || '';
+  if(val === (settings.adminPass || 'admin123')){ // success
+    adminLogin.style.display='none'; adminPanel.style.display='block'; renderAdminList();
+    document.getElementById('globalDiscount').value = settings.discount || 0;
+  } else alert('Password salah');
+});
 
-document.getElementById("doLogin").onclick = ()=>{
-  if(document.getElementById("adminPassword").value === settings.adminPass){
-    document.getElementById("adminLogin").style.display = "none";
-    document.getElementById("adminPanel").style.display = "block";
-    renderAdminList();
-  } else alert("Password salah");
-};
+/* admin actions */
+document.getElementById('addItem').addEventListener('click', ()=>{
+  const name = document.getElementById('newName').value.trim();
+  const price = Number(document.getElementById('newPrice').value || 0);
+  const cat = document.getElementById('newCat').value.trim() || 'Umum';
+  const img = document.getElementById('newImg').value.trim();
+  if(!name || !price){ alert('Nama & harga wajib'); return; }
+  menu.push({ id: genId(), name, price, category: cat, img }); save('savalory_menu', menu); renderFilters(); renderMenu(); renderAdminList();
+  document.getElementById('newName').value=''; document.getElementById('newPrice').value=''; document.getElementById('newCat').value=''; document.getElementById('newImg').value='';
+});
+
+document.getElementById('saveMenu').addEventListener('click', ()=>{ save('savalory_menu', menu); alert('Menu disimpan ke localStorage'); });
+document.getElementById('saveDiscount').addEventListener('click', ()=>{ settings.discount = Number(document.getElementById('globalDiscount').value || 0); save('savalory_settings', settings); alert('Diskon tersimpan'); updateTotals(); });
+
+document.getElementById('exportMenu').addEventListener('click', ()=>{ const json = JSON.stringify(menu,null,2); prompt('Copy JSON menu berikut:', json); });
+document.getElementById('resetDefault').addEventListener('click', ()=>{ if(confirm('Reset menu ke default?')){ menu = DEFAULT_MENU; save('savalory_menu', menu); renderFilters(); renderMenu(); renderAdminList(); } });
 
 function renderAdminList(){
-  const t = document.getElementById("adminList");
-  t.innerHTML = `<tr><th>Nama</th><th>Harga</th><th>Kategori</th><th>Aksi</th></tr>`;
-  menu.forEach((m,i)=>{
-    t.innerHTML += `
+  const el = document.getElementById('adminList'); el.innerHTML='';
+  menu.forEach((m, idx)=>{
+    const div = document.createElement('div'); div.style.padding='8px'; div.style.borderBottom='1px solid rgba(0,0,0,0.04)';
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="flex:1">
+          <strong contenteditable="false" data-idx="${idx}" class="adm-name">${m.name}</strong>
+          <div style="font-size:13px;color:var(--muted)">Rp <span class="adm-price">${m.price}</span> • ${m.category||'Umum'}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <button class="small-btn edit" data-idx="${idx}">Edit</button>
+          <button class="small-btn del" data-idx="${idx}">Hapus</button>
+        </div>
+      </div>
+    `;
+    el.appendChild(div);
+  });
+  // bind
+  el.querySelectorAll('.del').forEach(b=>b.addEventListener('click', (e)=>{
+    const i = Number(b.dataset.idx);
+    if(confirm('Hapus item ini?')){ menu.splice(i,1); save('savalory_menu', menu); renderFilters(); renderMenu(); renderAdminList(); }
+  }));
+  el.querySelectorAll('.edit').forEach(b=>b.addEventListener('click', (e)=>{
+    const i = Number(b.dataset.idx);
+    const nm = prompt('Ubah nama:', menu[i].name);
+    const pr = prompt('Ubah harga (angka):', menu[i].price);
+    const cat = prompt('Ubah kategori:', menu[i].category || 'Umum');
+    if(nm && pr){ menu[i].name = nm; menu[i].price = Number(pr); menu[i].category = cat || 'Umum'; save('savalory_menu', menu); renderFilters(); renderMenu(); renderAdminList(); }
+  }));
+}
+
+/* DARK MODE */
+function toggleDarkMode() {
+  document.body.classList.toggle("dark");
+/* admin setting to change admin password */
+function changeAdminPass(newPass){
+  settings.adminPass = newPass; save('savalory_settings', settings);
+}
+
+/* ---------- ADMIN PANEL ---------- */
+function showAdminLogin() {
+  let pass = prompt("Masukkan password admin:");
+  if (pass === "admin123") {
+    document.getElementById("adminPanel").style.display = "block";
+    renderAdminPanel();
+  }
+}
+/* ===========================
+   BOOTSTRAP UI
+   =========================== */
+renderFilters(); renderMenu(); renderCart(); renderCartCount();
+
+function renderAdminPanel() {
+  let table = document.getElementById("adminTable");
+  table.innerHTML = `
+    <tr>
+      <th>Menu</th><th>Harga</th><th>Diskon %</th><th>Sold Out</th>
+    </tr>
+  `;
+
+  menu.forEach((m, i) => {
+    table.innerHTML += `
       <tr>
-        <td><input value="${m.name}" oninput="menu[${i}].name=this.value"></td>
-        <td><input type="number" value="${m.price}" oninput="menu[${i}].price=this.value"></td>
-        <td>
-          <select onchange="menu[${i}].category=this.value">
-            <option ${m.category=='Makanan'?'selected':''}>Makanan</option>
-            <option ${m.category=='Minuman'?'selected':''}>Minuman</option>
-          </select>
-        </td>
-        <td><button onclick="del(${i})">Hapus</button></td>
-      </tr>`;
+        <td>${m.name}</td>
+        <td><input type="number" value="${m.price}" onchange="updatePrice(${m.id}, this.value)"></td>
+        <td><input type="number" value="0" onchange="updateDiscount(${m.id}, this.value)"></td>
+        <td><input type="checkbox" ${m.soldOut?"checked":""} onclick="toggleSoldOut(${m.id})"></td>
+      </tr>
+    `;
   });
 }
+/* helper escape */
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
 
-function del(i){
-  menu.splice(i,1);
-  saveMenu();
-  renderAdminList();
-}
-
-document.getElementById("addItem").onclick = ()=>{
-  menu.push({
-    id: genId(),
-    name: newName.value,
-    price: Number(newPrice.value),
-    category: newCat.value,
-    img: newImg.value
-  });
-  saveMenu();
+function updatePrice(id, newPrice) {
+  menu.find(m=>m.id===id).price = Number(newPrice);
   renderMenu();
-  renderAdminList();
-};
-
-document.getElementById("saveDiscount").onclick = ()=>{
-  settings.discount = Number(globalDiscount.value);
-  localStorage.setItem("savalory_settings",JSON.stringify(settings));
-  updateTotal();
-};
-
-function saveMenu(){
-  localStorage.setItem("savalory_menu", JSON.stringify(menu));
 }
-document.getElementById("resetDefault").onclick=()=>{
-  menu = DEFAULT_MENU;
-  saveMenu();
+/* Click outside modal to close */
+modalBackdrop.addEventListener('click', (e)=>{ if(e.target===modalBackdrop){ modalBackdrop.classList.remove('show'); } });
+
+function updateDiscount(id, value) {
+  let item = menu.find(m=>m.id===id);
+  let discount = item.price * (value/100);
+  item.price = item.price - discount;
   renderMenu();
-  renderAdminList();
-};
-document.getElementById("exportMenu").onclick = ()=>{
-  const blob = new Blob([JSON.stringify(menu,null,2)], {type:"application/json"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "menu.json";
-  a.click();
-};
+}
+/* Initial save of settings if not exist */
+if(!load('savalory_settings')) save('savalory_settings', settings);
+
+function toggleSoldOut(id) {
+  menu.find(m=>m.id===id).soldOut = !menu.find(m=>m.id===id).soldOut;
+  renderMenu();
+}
+/* expose for debugging */
+window._Savalory = {menu, cart, settings};
 </script>
 </body>
 </html>
